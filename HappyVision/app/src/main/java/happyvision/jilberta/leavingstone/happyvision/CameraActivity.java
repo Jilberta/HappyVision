@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,17 +35,23 @@ public class CameraActivity extends Activity {
     private AudioManager audioManager;
     private int originalVolume;
     private int musicID;
-    private static final int MAX_DURATION = 10000;
+    private static final int MAX_DURATION = 3000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
+        context = this;
         camera = getCameraInstance();
+        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        originalVolume = audioManager
+                .getStreamVolume(AudioManager.STREAM_MUSIC);
         preview = new CameraPreview(this, camera);
         FrameLayout framePreview = (FrameLayout) findViewById(R.id.camera_preview_frame);
         framePreview.addView(preview);
+
+        getMusic();
 
         ((Button) findViewById(R.id.capture)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,36 +59,45 @@ public class CameraActivity extends Activity {
                 System.out.println("Clicked");
                 if (isRecording) {
                     System.out.println("Paused");
-                    changeButtonText("Capture");
-                    recorder.stop();
-                //    player.stop();
-                    releaseMediaRecorder();
-                    camera.lock();
-                    isRecording = false;
-//                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
-//                            originalVolume, 0);
+                    stopRecording();
                 } else {
                     System.out.println(" Start Recording");
                     boolean prepared = prepareVideoRecorder();
                     System.out.println("Opaa " + prepared);
                     if (prepared) {
                         System.out.println("Recording");
-                        changeButtonText("Pause");
-//                        audioManager
-//                                .setStreamVolume(
-//                                        AudioManager.STREAM_MUSIC,
-//                                        audioManager
-//                                                .getStreamMaxVolume(AudioManager.STREAM_MUSIC),
-//                                        0);
-                        recorder.start();
-                    //    player.start();
-                        isRecording = true;
+                        startRecording();
                     } else {
                         releaseMediaRecorder();
                     }
                 }
             }
         });
+    }
+
+    private void startRecording(){
+        changeButtonText("Pause");
+        audioManager
+                .setStreamVolume(AudioManager.STREAM_MUSIC, audioManager
+                        .getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
+        recorder.start();
+        player.start();
+        isRecording = true;
+    }
+
+    private void stopRecording(){
+        changeButtonText("Capture");
+        recorder.stop();
+        player.stop();
+        releaseMediaRecorder();
+        camera.lock();
+        isRecording = false;
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
+                originalVolume, 0);
+    }
+
+    private void getMusic(){
+        musicID = getResources().getIdentifier("joe_cocker_you_can_leave_your_hat_on", "drawable", getApplicationContext().getPackageName());
     }
 
     public static Camera getCameraInstance() {
@@ -126,7 +142,7 @@ public class CameraActivity extends Activity {
 
     private boolean prepareVideoRecorder() {
 
-//        player = MediaPlayer.create(context, musicID);
+        player = MediaPlayer.create(context, musicID);
         recorder = new MediaRecorder();
 
         camera.unlock();
@@ -142,14 +158,23 @@ public class CameraActivity extends Activity {
         recorder.setPreviewDisplay(preview.getHolder().getSurface());
         recorder.setMaxDuration(MAX_DURATION);
 
+        recorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
+            @Override
+            public void onInfo(MediaRecorder mr, int what, int extra) {
+                if(what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED){
+                    Toast.makeText(context, "Video Capturing Finished", Toast.LENGTH_LONG).show();
+                    stopRecording();
+                }
+            }
+        });
+
         try {
-     //       player.prepare();
+            player.prepare();
         } catch (IllegalStateException e1) {
             e1.printStackTrace();
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
-//        } catch (IOException e1) {
-//            e1.printStackTrace();
-//        }
 
         try {
             recorder.prepare();
@@ -192,8 +217,8 @@ public class CameraActivity extends Activity {
             recorder.release();
             recorder = null;
             camera.lock();
-//            player.release();
-//            player = null;
+            player.release();
+            player = null;
         }
     }
 
