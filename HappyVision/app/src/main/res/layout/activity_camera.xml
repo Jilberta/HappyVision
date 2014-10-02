@@ -4,6 +4,13 @@
     android:layout_height="match_parent"
     tools:context="happyvision.jilberta.leavingstone.happyvision.CameraActivity">
 
+    <VideoView
+        android:id="@+id/video_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" >
+     </VideoView>
+
     <FrameLayout
         android:id="@+id/camera_preview_frame"
         android:layout_width="fill_parent"

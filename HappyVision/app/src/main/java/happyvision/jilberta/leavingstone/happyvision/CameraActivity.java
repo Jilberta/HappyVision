@@ -3,14 +3,18 @@ package happyvision.jilberta.leavingstone.happyvision;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.CamcorderProfile;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +22,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.Toast;
+import android.widget.VideoView;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -38,6 +45,8 @@ public class CameraActivity extends Activity {
     private AudioManager audioManager;
     private int originalVolume;
     private int musicID;
+    private String videoPath;
+    private VideoView videoView;
     private static final int MAX_DURATION = 10000;
 
 
@@ -66,6 +75,9 @@ public class CameraActivity extends Activity {
         preview = new CameraPreview(this, camera);
         FrameLayout framePreview = (FrameLayout) findViewById(R.id.camera_preview_frame);
         framePreview.addView(preview);
+
+        videoView = (VideoView) findViewById(R.id.video_view);
+        System.out.println("ASd");
 
 
 
@@ -132,6 +144,7 @@ public class CameraActivity extends Activity {
         isRecording = false;
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
                 originalVolume, 0);
+        openDialog();
     }
 
     private void getMusic(SongItem song){
@@ -198,6 +211,7 @@ public class CameraActivity extends Activity {
         recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
 
         String path = getOutputMediaFile().toString();
+        videoPath = path;
         recorder.setOutputFile(path);
 
         recorder.setPreviewDisplay(preview.getHolder().getSurface());
@@ -234,11 +248,20 @@ public class CameraActivity extends Activity {
     }
 
     private void openDialog(){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setTitle("Capturing Finished");
         alertDialogBuilder.setMessage("Bla Bla Bla");
         alertDialogBuilder.setCancelable(false);
-        alertDialogBuilder.setPositiveButton("Play", null);
+        alertDialogBuilder.setPositiveButton("Play", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+//                videoView = (VideoView) findViewById(R.id.video_view);
+                videoView.setVideoPath(videoPath);
+                videoView.setMediaController(new MediaController(context));
+                videoView.start();
+            }
+        });
         alertDialogBuilder.setNegativeButton("Share", null);
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
