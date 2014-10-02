@@ -1,13 +1,12 @@
 package appender.utils;
 
 import java.io.File;
-
-import org.bestforce.testmp4parser.R;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+import happyvision.jilberta.leavingstone.happyvision.R;
 
 //public class Ut implements OpenStreetMapConstants, OpenStreetMapViewConstants {
 public class Ut {

@@ -1,7 +1,70 @@
-<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="happyvision.jilberta.leavingstone.happyvision.CameraActivity">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    <FrameLayout
+        android:id="@+id/camera_preview_frame"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" >
+    </FrameLayout>
 
-</LinearLayout>
+    <!--<Button-->
+    <!--android:id="@+id/capture"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Capture"/>-->
+
+    <LinearLayout
+        android:id="@+id/record_buttons_layout"
+        android:layout_width="70dip"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical"
+        android:background="@drawable/rotated_record_button_bar" >
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dip"
+            android:layout_marginLeft="8dip"
+            android:src="@drawable/record_home_icon" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dip"
+            android:layout_marginLeft="8dip"
+            android:src="@drawable/record_back" />
+
+        <ImageView
+            android:id="@+id/capture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="18dip"
+            android:src="@drawable/record_rec" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="18dip"
+            android:layout_marginLeft="8dip"
+            android:src="@drawable/record_save_icon" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="18dip"
+            android:layout_marginLeft="8dip"
+            android:src="@drawable/record_galleray_icon" />
+    </LinearLayout>
+
+</RelativeLayout>

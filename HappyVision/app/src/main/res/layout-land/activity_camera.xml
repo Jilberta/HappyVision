@@ -27,19 +27,20 @@
 
 
         <ImageView
+            android:id="@+id/home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dip"
-            android:layout_marginLeft="8dip"
+            android:layout_marginTop="14dip"
+            android:layout_marginLeft="6dip"
             android:src="@drawable/record_home_icon" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="24dip"
-            android:layout_marginLeft="8dip"
+            android:layout_marginTop="36dip"
+            android:layout_marginLeft="6dip"
             android:src="@drawable/record_back" />
 
         <ImageView
@@ -47,23 +48,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="18dip"
+            android:layout_marginTop="30dip"
             android:src="@drawable/record_rec" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="18dip"
-            android:layout_marginLeft="8dip"
+            android:layout_marginTop="32dip"
+            android:layout_marginLeft="4dip"
             android:src="@drawable/record_save_icon" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="18dip"
-            android:layout_marginLeft="8dip"
+            android:layout_marginTop="28dip"
+            android:layout_marginLeft="6dip"
             android:src="@drawable/record_galleray_icon" />
     </LinearLayout>
 
