@@ -1,4 +1,4 @@
-package happyvision.jilberta.leavingstone.happyvision;
+package camera;
 
 import android.content.Context;
 import android.hardware.Camera;
