@@ -54,14 +54,14 @@ public class MyActivity extends Activity {
         list.setAdapter(adapter);
         list.setViewModifier(new CircularViewModifier());
         layout.addView(list);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent cameraActivity = new Intent(MyActivity.this, CameraActivity.class);
-                cameraActivity.putExtra("Song", (SongItem)parent.getAdapter().getItem(position));
-                startActivity(cameraActivity);
-            }
-        });
+//        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent cameraActivity = new Intent(MyActivity.this, CameraActivity.class);
+//                cameraActivity.putExtra("Song", (SongItem)parent.getAdapter().getItem(position));
+//                startActivity(cameraActivity);
+//            }
+//        });
     }
 
 
@@ -85,7 +85,7 @@ public class MyActivity extends Activity {
     }
 
     private TestAdapter parseXML() throws XmlPullParserException, IOException {
-        TestAdapter adapter = new TestAdapter();
+        TestAdapter adapter = new TestAdapter(this);
         XmlResourceParser xpp = getResources().getXml(R.xml.songs);
         int event = xpp.getEventType();
 

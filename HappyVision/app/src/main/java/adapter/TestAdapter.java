@@ -1,8 +1,13 @@
 package adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.DataSetObserver;
 import android.graphics.Color;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -14,14 +19,31 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import happyvision.jilberta.leavingstone.happyvision.CameraActivity;
+import happyvision.jilberta.leavingstone.happyvision.MyActivity;
 import happyvision.jilberta.leavingstone.happyvision.R;
 import item.SongItem;
+import media.AudioProvider;
+import views.CenteredViewItem;
 
 /**
  * Created by Jay on 10/2/2014.
  */
 public class TestAdapter implements ListAdapter {
     public List<SongItem> list = new ArrayList<SongItem>();
+
+    private Context context;
+    private static MediaPlayer player;
+    private static AudioManager audioManager;
+    private static int originalVolume;
+    private static boolean isPlaying = false;
+
+    public TestAdapter(Context context) {
+        this.context = context;
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        originalVolume = audioManager
+                .getStreamVolume(AudioManager.STREAM_MUSIC);
+    }
 
     @Override
     public void registerDataSetObserver(DataSetObserver observer) {
@@ -53,30 +75,48 @@ public class TestAdapter implements ListAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-//        LinearLayout ll = new LinearLayout(parent.getContext());
-//        LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        ll.setLayoutParams(params2);
-//        ll.setOrientation(LinearLayout.HORIZONTAL);
+        final SongItem song = (SongItem) getItem(position);
 
-        SongItem song = (SongItem) getItem(position);
+        CenteredViewItem viewItem = new CenteredViewItem(parent.getContext());
+        ((ImageView) viewItem.findViewById(R.id.song_image)).setImageResource(song.getImageId());
+        ((TextView) viewItem.findViewById(R.id.song_title)).setText(song.getTitle());
+        ((TextView) viewItem.findViewById(R.id.song_artist)).setText(song.getArtist());
 
-        ImageView img = new ImageView(parent.getContext());
-//            LayoutParams params = new LayoutParams(144, 144);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        img.setLayoutParams(params);
-        img.setImageResource(song.getImageId());
-//        ll.addView(img);
-//
-//        TextView tv = new TextView(parent.getContext());
-//        tv.setText("Avoeeeeeee");
-//        tv.setTextColor(Color.WHITE);
-//        tv.setTextSize(50);
-//        tv.setVisibility(View.GONE);
-//        tv.setTag("Opa");
-//
-//        ll.addView(tv);
+        ImageView recButton = (ImageView) viewItem.findViewById(R.id.rec_button);
+        recButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if(AudioProvider.isPlaying())
+//                    AudioProvider.stopMusic();
+                if(isPlaying)
+                    isPlaying = AudioProvider.stopMusic(player, audioManager, originalVolume);
+                Intent cameraActivity = new Intent(context, CameraActivity.class);
+                cameraActivity.putExtra("Song", song);
+                context.startActivity(cameraActivity);
+            }
+        });
 
-        convertView = img;
+        final ImageView playButton = (ImageView) viewItem.findViewById(R.id.play_button);
+        final ImageView pauseButton = (ImageView) viewItem.findViewById(R.id.pause_button);
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playButton.setVisibility(View.INVISIBLE);
+                pauseButton.setVisibility(View.VISIBLE);
+                player = MediaPlayer.create(context, song.getMusicId());
+                isPlaying = AudioProvider.playMusic(context, player, audioManager, song.getMusicId());
+            }
+        });
+        pauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pauseButton.setVisibility(View.INVISIBLE);
+                playButton.setVisibility(View.VISIBLE);
+                isPlaying = AudioProvider.stopMusic(player, audioManager, originalVolume);
+            }
+        });
+
+        convertView = viewItem;
 
         return convertView;
     }

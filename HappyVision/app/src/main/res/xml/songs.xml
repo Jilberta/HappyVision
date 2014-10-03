@@ -1,63 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <song>
-        <title></title>
-        <artist></artist>
-        <image>james_bond_007</image>
-        <music>james_bond_007_movie_theme_music</music>
-    </song>
-    <song>
-        <title></title>
-        <artist></artist>
-        <image>appolo</image>
-        <music>apollo_440_cant_stop_the_rock</music>
-    </song>
-    <song>
-        <title></title>
-        <artist></artist>
-        <image>aqua</image>
-        <music>aqua_barbie_girl</music>
-    </song>
-    <song>
-        <title></title>
-        <artist></artist>
+        <title>Buffalo Soldier</title>
+        <artist>Bob Marley</artist>
         <image>bob_marly</image>
         <music>bob_marley_buffalo_soldier</music>
     </song>
     <song>
-        <title></title>
-        <artist></artist>
+        <title>Can't Stop The Rock</title>
+        <artist>Appolo 440</artist>
+        <image>appolo</image>
+        <music>apollo_440_cant_stop_the_rock</music>
+    </song>
+    <song>
+        <title>Barbie Girl</title>
+        <artist>Aqua</artist>
+        <image>aqua</image>
+        <music>aqua_barbie_girl</music>
+    </song>
+    <song>
+        <title>Movie Theme</title>
+        <artist>James Bond</artist>
+        <image>james_bond_007</image>
+        <music>james_bond_007_movie_theme_music</music>
+    </song>
+    <song>
+        <title>Wonderland</title>
+        <artist>Boogie</artist>
         <image>boogie_wonderland</image>
         <music>boogie_wonderland_ewf</music>
     </song>
     <song>
-        <title></title>
-        <artist></artist>
+        <title>Johny Be Good</title>
+        <artist>Chuck Berry</artist>
         <image>chukbery</image>
         <music>chuck_berry_johny_be_good</music>
     </song>
     <song>
-        <title></title>
-        <artist></artist>
-        <image>daft_punk</image>
-        <music>daft_punk_one_more_time</music>
-    </song>
-    <song>
-        <title></title>
-        <artist></artist>
+        <title>Baywatch</title>
+        <artist>David Hasselhof</artist>
         <image>david_haselholf</image>
         <music>david_hasselhoff_baywatch_soundtrack</music>
     </song>
     <song>
-        <title></title>
-        <artist></artist>
-        <image>im_singin_in_the_rain</image>
-        <music>im_singing_in_the_rain_gene_kelly</music>
-    </song>
-    <song>
-        <title></title>
-        <artist></artist>
+        <title>Leave your hat on</title>
+        <artist>Joe Cocker</artist>
         <image>joe_cocker</image>
         <music>joe_cocker_you_can_leave_your_hat_on</music>
+    </song>
+    <song>
+        <title>Harlem Shake</title>
+        <artist>Who Knows</artist>
+        <image>harlem_shake_image</image>
+        <music>harlem_shake</music>
+    </song>
+    <song>
+        <title>One More Time</title>
+        <artist>Daft Punk</artist>
+        <image>daft_punk</image>
+        <music>daft_punk_one_more_time</music>
+    </song>
+    <song>
+        <title>Singing in the Rain</title>
+        <artist>Some Guy</artist>
+        <image>im_singin_in_the_rain</image>
+        <music>im_singing_in_the_rain_gene_kelly</music>
     </song>
 </resources>

@@ -12,6 +12,7 @@ import android.media.CamcorderProfile;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -26,10 +27,22 @@ import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.coremedia.iso.boxes.Container;
+import com.googlecode.mp4parser.authoring.Movie;
+import com.googlecode.mp4parser.authoring.Track;
+import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
+import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
+import com.googlecode.mp4parser.authoring.tracks.AppendTrack;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
 import camera.CameraPreview;
 import item.SongItem;
 
@@ -47,7 +60,7 @@ public class CameraActivity extends Activity {
     private int musicID;
     private String videoPath;
     private VideoView videoView;
-    private static final int MAX_DURATION = 10000;
+    private static final int MAX_DURATION = 15000;
 
 
     @Override
@@ -77,7 +90,6 @@ public class CameraActivity extends Activity {
         framePreview.addView(preview);
 
         videoView = (VideoView) findViewById(R.id.video_view);
-        System.out.println("ASd");
 
 
 
@@ -256,15 +268,65 @@ public class CameraActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-//                videoView = (VideoView) findViewById(R.id.video_view);
+                findViewById(R.id.record_buttons_layout).setVisibility(View.INVISIBLE);
                 videoView.setVideoPath(videoPath);
                 videoView.setMediaController(new MediaController(context));
                 videoView.start();
+                videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        findViewById(R.id.record_buttons_layout).setVisibility(View.VISIBLE);
+                        openDialogAfterPlayingVideo();
+                    }
+                });
             }
         });
-        alertDialogBuilder.setNegativeButton("Share", null);
+        alertDialogBuilder.setNegativeButton("Try Again", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                File file = new File(videoPath);
+                file.delete();
+                goImmersiveMode();
+            }
+        });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    private void openDialogAfterPlayingVideo(){
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setTitle("Capturing Finished");
+        alertDialogBuilder.setMessage("Bla Bla Bla");
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                Toast.makeText(context, "Video is Saved", Toast.LENGTH_SHORT).show();
+                goImmersiveMode();
+            }
+        });
+        alertDialogBuilder.setNegativeButton("Try Again", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                File file = new File(videoPath);
+                file.delete();
+                videoView.stopPlayback();
+                goImmersiveMode();
+            }
+        });
+        alertDialogBuilder.setNeutralButton("Share", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("video/*");
+                sharingIntent.putExtra(Intent.EXTRA_STREAM, videoPath);
+                startActivity(Intent.createChooser(sharingIntent, "Share Your Happy Vision using"));
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+        goImmersiveMode();
     }
 
     private File getOutputMediaFile() {
@@ -303,5 +365,15 @@ public class CameraActivity extends Activity {
             camera.release();
             camera = null;
         }
+    }
+
+    private void goImmersiveMode(){
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
 }

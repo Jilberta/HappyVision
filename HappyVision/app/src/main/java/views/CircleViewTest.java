@@ -101,12 +101,20 @@ public class CircleViewTest extends ListView implements OnScrollListener {
      *          <p/>
      *          how long will the scroll take
      */
-    public void smoothScrollToView(View v) {
+    public void smoothScrollToView(final View v) {
         final float y = v.getY() + v.getHeight() * 0.5f;
         final float halfHeight = getHeight() * 0.5f;
         final int distance = (int) (y - halfHeight);
 
         smoothScrollBy(distance, mScrollDuration);
+        post(new Runnable() {
+            @Override
+            public void run() {
+                v.findViewById(R.id.play_button).setVisibility(VISIBLE);
+                v.findViewById(R.id.stuff).setVisibility(VISIBLE);
+//                v.findViewWithTag("Opa").setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override
@@ -138,6 +146,12 @@ public class CircleViewTest extends ListView implements OnScrollListener {
                     mCenterRunnable.setView(childView);
                     postOnAnimation(mCenterRunnable);
                 }
+            }
+        } else {
+            final View childView = findViewAtCenter();
+            if (childView != null) {
+                childView.findViewById(R.id.play_button).setVisibility(INVISIBLE);
+                childView.findViewById(R.id.stuff).setVisibility(INVISIBLE);
             }
         }
     }
