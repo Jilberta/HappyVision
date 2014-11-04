@@ -19,7 +19,6 @@ import java.io.IOException;
  */
 public class MyAudioEncoder {
 
-
     public static void encodeSound(String videoPath, String audioPath){
         try {
             String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
