@@ -22,29 +22,43 @@ public class MyAudioEncoder {
     public static void encodeSound(String videoPath, String audioPath){
         try {
             String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
-            Movie countVideo = MovieCreator.build(videoPath);
-            String audioPath2 = baseDir+"/Download/"+"count.m4a";
-            Movie countAudioDeutsch = MovieCreator.build(audioPath2);
+//            Movie countVideo = MovieCreator.build(videoPath);
+//            String audioPath2 = baseDir+"/Download/"+"count.m4a";
+//            Movie countAudioDeutsch = MovieCreator.build(audioPath2);
+//
+//            Track audioTrackDeutsch = countAudioDeutsch.getTracks().get(0);
+//            audioTrackDeutsch.getTrackMetaData().setLanguage("deu");
+//
+//            countVideo.addTrack(audioTrackDeutsch);
 
-            Track audioTrackDeutsch = countAudioDeutsch.getTracks().get(0);
-            audioTrackDeutsch.getTrackMetaData().setLanguage("deu");
+            Movie videoContainer = MovieCreator.build(videoPath);
+            Movie audioContainer = MovieCreator.build(audioPath);
 
-            countVideo.addTrack(audioTrackDeutsch);
+            Track audioTrack = audioContainer.getTracks().get(0);
+
+            Movie newVideo = new Movie();
+            for(Track t : videoContainer.getTracks()){
+                if (t.getHandler().equals("vide")) {
+                    newVideo.addTrack(t);
+                }
+            }
+
+            newVideo.addTrack(audioTrack);
 
             {
-                Container out = new DefaultMp4Builder().build(countVideo);
+                Container out = new DefaultMp4Builder().build(newVideo);
                 FileOutputStream fos = new FileOutputStream(new File(baseDir + "/Download/" + "output.mp4"));
                 out.writeContainer(fos.getChannel());
                 fos.close();
             }
-            {
+            /*{
                 FragmentedMp4Builder fragmentedMp4Builder = new FragmentedMp4Builder();
                 fragmentedMp4Builder.setIntersectionFinder(new SyncSampleIntersectFinderImpl(countVideo, null, -1));
                 Container out = fragmentedMp4Builder.build(countVideo);
                 FileOutputStream fos = new FileOutputStream(new File(baseDir + "/Download/" + "output-frag.mp4"));
                 out.writeContainer(fos.getChannel());
                 fos.close();
-            }
+            }*/
         } catch (IOException e) {
             e.printStackTrace();
         }
