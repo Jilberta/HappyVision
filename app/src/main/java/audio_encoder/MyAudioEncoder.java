@@ -63,6 +63,7 @@ public class MyAudioEncoder {
                 out.writeContainer(fos.getChannel());
                 fos.close();
             }
+
             /*{
                 FragmentedMp4Builder fragmentedMp4Builder = new FragmentedMp4Builder();
                 fragmentedMp4Builder.setIntersectionFinder(new SyncSampleIntersectFinderImpl(countVideo, null, -1));
