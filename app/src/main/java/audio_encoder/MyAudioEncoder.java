@@ -1,5 +1,6 @@
 package audio_encoder;
 
+import android.content.Context;
 import android.os.Environment;
 
 import com.coremedia.iso.boxes.Container;
@@ -10,29 +11,40 @@ import com.googlecode.mp4parser.authoring.builder.FragmentedMp4Builder;
 import com.googlecode.mp4parser.authoring.builder.SyncSampleIntersectFinderImpl;
 import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Created by Jay on 10/29/2014.
  */
 public class MyAudioEncoder {
 
-    public static void encodeSound(String videoPath, String audioPath){
+    public static void encodeSound(String videoPath, int audioID, Context context){
         try {
             String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+
+            String tempFilePath = baseDir+"/Download/"+"opa.m4a";
+            InputStream is = context.getResources().openRawResource(audioID);
+            OutputStream stream = new BufferedOutputStream(new FileOutputStream(tempFilePath));
+            int bufferSize = 1024;
+            byte[] buffer = new byte[bufferSize];
+            int len = 0;
+            while ((len = is.read(buffer)) != -1) {
+                stream.write(buffer, 0, len);
+            }
+            if(stream!=null)
+                stream.close();
+
 //            Movie countVideo = MovieCreator.build(videoPath);
-//            String audioPath2 = baseDir+"/Download/"+"count.m4a";
-//            Movie countAudioDeutsch = MovieCreator.build(audioPath2);
-//
-//            Track audioTrackDeutsch = countAudioDeutsch.getTracks().get(0);
-//            audioTrackDeutsch.getTrackMetaData().setLanguage("deu");
-//
-//            countVideo.addTrack(audioTrackDeutsch);
+            String audioPath2 = baseDir+"/Download/"+"count.m4a";
+
 
             Movie videoContainer = MovieCreator.build(videoPath);
-            Movie audioContainer = MovieCreator.build(audioPath);
+            Movie audioContainer = MovieCreator.build(tempFilePath);
 
             Track audioTrack = audioContainer.getTracks().get(0);
 
@@ -59,8 +71,12 @@ public class MyAudioEncoder {
                 out.writeContainer(fos.getChannel());
                 fos.close();
             }*/
+            File file = new File(tempFilePath);
+            file.delete();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
     }
 }

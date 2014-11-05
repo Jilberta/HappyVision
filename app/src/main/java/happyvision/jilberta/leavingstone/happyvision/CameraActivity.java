@@ -25,6 +25,7 @@ import android.widget.VideoView;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -221,8 +222,11 @@ public class CameraActivity extends Activity {
                 if(what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED){
                     Toast.makeText(context, "Video Capturing Finished", Toast.LENGTH_LONG).show();
                     stopRecording();
-                    String audioPath = String.valueOf(Uri.parse("android.resource://happyvision.jilberta.leavingstone.happyvision/drawable/count"));
-                    MyAudioEncoder.encodeSound(videoPath, audioPath);
+
+                    int musicId = getResources().getIdentifier("count", "drawable",
+                            getApplicationContext().getPackageName());
+
+                    MyAudioEncoder.encodeSound(videoPath, musicId, context);
                     openDialog();
                 }
             }
